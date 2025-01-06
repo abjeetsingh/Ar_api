@@ -1,0 +1,9 @@
+
+mongo-data
+*.env
+node_modules/
+*getenv.sh
+start_docker.sh
+*.pyc
+__pycache__/
+.eslintcache
