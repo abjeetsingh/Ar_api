@@ -1,0 +1,15 @@
+exit
+db.users.find().pretty()
+show collections
+use user_details
+show dbs
+show collections
+db.user_details.find().pretty()
+use users
+db.user.find().pretty()
+db.users.find().pretty()
+db.model.find().pretty()
+show collections
+use models
+show dbs
+ls

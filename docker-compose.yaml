@@ -1,0 +1,42 @@
+
+networks:
+  ar_network:
+    name: ar_network
+    ipam:
+      config:
+        - subnet: ${DOCKER_APP_NETWORK_SUBNET}
+
+services:
+  mongodb:
+    image: mongo
+    container_name: ar.mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "${MONGO_PORT}"
+    networks:
+      - ar_network
+    volumes:
+      - ./mongo-data:/data/db
+
+  api:
+    build:
+      context: ./ar_api # Path to directory containing Dockerfile
+      dockerfile: DockerFile.dev
+    container_name: ar.api
+    volumes:
+      - ./ar_api/api:/ar_api/api
+      - ./ar_api/settings.py:/ar_api/settings.py
+    networks:
+      - ar_network
+    environment:
+      PYTHONUNBUFFERED: 1
+      PYTHONIOENCODING: UTF-8
+      API_INTERNAL_PORT: "${API_INTERNAL_PORT}"
+      MONGO_CONNECTION_URI: "${MONGO_CONNECTION_URI}"
+      MONGO_INITDB_ROOT_PASSWORD: "${MONGO_INITDB_ROOT_PASSWORD}"
+      MONGO_INITDB_ROOT_USERNAME: "${MONGO_INITDB_ROOT_USERNAME}"
+      API_JWT_SECRET : $"API_JWT_SECRET"
+    ports:
+      - ${API_EXTERNAL_PORT}:${API_INTERNAL_PORT}
